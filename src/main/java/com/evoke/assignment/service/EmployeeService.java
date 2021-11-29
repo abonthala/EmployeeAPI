@@ -6,13 +6,16 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.evoke.assignment.dto.EmployeeDTO;
+import com.evoke.assignment.dto.EmployeeUpdateDTO;
+import com.evoke.assignment.entity.Employee;
 import com.evoke.assignment.exceptions.EmployeeAlreadyExistsException;
 import com.evoke.assignment.exceptions.EmployeeNotFoundException;
-import com.evoke.assignment.model.Employee;
-import com.evoke.assignment.model.EmployeeUpdate;
 import com.evoke.assignment.repository.EmployeeRepository;
+import com.evoke.assignment.response.ResponseModel;
 
 @Service
 public class EmployeeService {
@@ -40,14 +43,15 @@ public class EmployeeService {
 		return employee.get();
 	}
 	
-	public Employee createEmployee(Employee employee)
+	public void createEmployee(EmployeeDTO employeeDTO)
 	{
 		logger.info("Inside createEmployee method of EmployeeService.");
-		if(employeeRepository.findById(employee.getEmployeeId()).isPresent())
+		if(employeeRepository.findById(employeeDTO.getEmployeeId()).isPresent())
 		{
-			throw new EmployeeAlreadyExistsException("Employee with "+employee.getEmployeeId()+" already exists in database.");
+			throw new EmployeeAlreadyExistsException("Employee with "+employeeDTO.getEmployeeId()+" already exists in database.");
 		}
-		return employeeRepository.save(employee);
+		Employee employee = DTOtoEntity(employeeDTO);
+		employeeRepository.save(employee);
 	}
 	
 	public Employee removeEmployee(Integer id)
@@ -65,7 +69,7 @@ public class EmployeeService {
 		return tempEmployee;	
 	}
 	
-	public Employee updateEmployee(Integer Id, EmployeeUpdate empUpdate)
+	public void updateEmployee(Integer Id, EmployeeUpdateDTO empUpdate)
 	{
 		logger.info("Inside updateEmployee method of EmployeeService.");
 		Optional<Employee> employee = employeeRepository.findById(Id);
@@ -79,7 +83,20 @@ public class EmployeeService {
 		updatedEmployee.setEmployeeName(empUpdate.getName());
 		updatedEmployee.setEmployeeEmail(empUpdate.getEmail());
 		updatedEmployee.setEmployeePhone(empUpdate.getPhone());
-		return employeeRepository.save(updatedEmployee);
+		employeeRepository.save(updatedEmployee);
 	}
-
+	
+	public Employee DTOtoEntity(EmployeeDTO employeeDTO)
+	{
+		return new Employee(employeeDTO.getEmployeeId(), employeeDTO.getEmployeeName(), employeeDTO.getEmployeeEmail(),
+							employeeDTO.getEmployeePhone(), employeeDTO.getCreatedBy(), employeeDTO.getCreatedOn());
+	}
+	
+	public ResponseModel getResponse(String message, HttpStatus status)
+	{
+		ResponseModel response = new ResponseModel();
+		response.setMessage(message);
+		response.setStatus(null);
+		return response;
+	}
 }

@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.evoke.assignment.dto.EmployeeDTO;
+import com.evoke.assignment.dto.EmployeeUpdateDTO;
+import com.evoke.assignment.entity.Employee;
 import com.evoke.assignment.exceptions.EmployeeNotFoundException;
-import com.evoke.assignment.model.Employee;
-import com.evoke.assignment.model.EmployeeUpdate;
+import com.evoke.assignment.response.ResponseModel;
 import com.evoke.assignment.service.EmployeeService;
 
 @RestController
@@ -56,10 +58,11 @@ public class EmployeeController {
 	 * @param employee
 	 */
 	@PostMapping("/employees")
-	public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee)
+	public ResponseEntity<ResponseModel> addEmployee(@RequestBody EmployeeDTO employeeDTO)
 	{
 		logger.info("Inside addEmployee method of EmployeeController.");
-		return new ResponseEntity<Employee>(empService.createEmployee(employee), HttpStatus.CREATED);
+		empService.createEmployee(employeeDTO);
+		return new ResponseEntity<ResponseModel>(empService.getResponse("User is inserted successfully to DB", HttpStatus.CREATED), HttpStatus.CREATED);
 	}
 	
 	/**
@@ -79,11 +82,12 @@ public class EmployeeController {
 	 * @param empUpdate
 	 */
 	@PutMapping("/employees/{id}")
-	public ResponseEntity<Employee> updateEmployee(@PathVariable("id") Integer id, 
-											@RequestBody EmployeeUpdate empUpdate) throws EmployeeNotFoundException
+	public ResponseEntity<ResponseModel> updateEmployee(@PathVariable("id") Integer id, 
+											@RequestBody EmployeeUpdateDTO empUpdate) throws EmployeeNotFoundException
 	{
 		logger.info("Inside updateEmployee method of EmployeeController.");
-		return new ResponseEntity<Employee>(empService.updateEmployee(id, empUpdate), HttpStatus.OK);
+		empService.updateEmployee(id, empUpdate);
+		return new ResponseEntity<>(empService.getResponse("User is successfully updated in DB", HttpStatus.OK), HttpStatus.OK);
 	}
 
 }

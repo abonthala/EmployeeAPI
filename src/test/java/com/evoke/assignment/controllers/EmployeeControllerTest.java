@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -24,8 +24,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.evoke.assignment.model.Employee;
-import com.evoke.assignment.model.EmployeeUpdate;
+import com.evoke.assignment.dto.EmployeeUpdateDTO;
+import com.evoke.assignment.entity.Employee;
+import com.evoke.assignment.response.ResponseModel;
 import com.evoke.assignment.service.EmployeeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -94,15 +95,16 @@ class EmployeeControllerTest {
 
 	@Test
 	void testAddEmployee() throws Exception{
-		when(employeeService.createEmployee(Mockito.any(Employee.class))).thenReturn(employee);
+		ResponseModel response = new ResponseModel("User is inserted successfully to DB", HttpStatus.CREATED);
+		when(employeeService.getResponse(Mockito.anyString(), Mockito.any())).thenReturn(response);
 		
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/employee-service/employees").
 				                              contentType(MediaType.APPLICATION_JSON).
-				                              content(mapToJson(employee))).
+				                              content(mapToJson(response))).
 				                              andExpect(MockMvcResultMatchers.status().isCreated()).
 				                              andReturn();
 		assertEquals(201, mvcResult.getResponse().getStatus());
-		assertEquals(mvcResult.getResponse().getContentAsString(), mapToJson(employee));
+		assertEquals(mvcResult.getResponse().getContentAsString(), mapToJson(response));
 	}
 
 	@Test
@@ -121,15 +123,16 @@ class EmployeeControllerTest {
 
 	@Test
 	void testUpdateEmployee() throws Exception{
-		when(employeeService.updateEmployee(Mockito.any(Integer.class), Mockito.any(EmployeeUpdate.class))).thenReturn(employee);
+		ResponseModel response = new ResponseModel("User is successfully updated in DB", HttpStatus.OK);
+		when(employeeService.getResponse(Mockito.anyString(), Mockito.any())).thenReturn(response);
 		
 		MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/employee-service/employees/1").
 				                              contentType(MediaType.APPLICATION_JSON).
-				                              content(mapToJson(employee))).
+				                              content(mapToJson(response))).
 				                              andExpect(MockMvcResultMatchers.status().isOk())
 				                              .andReturn();
 		assertEquals(200, mvcResult.getResponse().getStatus());
-		assertEquals(mvcResult.getResponse().getContentAsString(), mapToJson(employee));
+		assertEquals(mvcResult.getResponse().getContentAsString(), mapToJson(response));
 	}
 	
 	public static String mapToJson(final Object obj) throws JsonProcessingException{

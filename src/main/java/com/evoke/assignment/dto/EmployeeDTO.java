@@ -1,46 +1,21 @@
-package com.evoke.assignment.model;
+package com.evoke.assignment.dto;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-
-@Entity
-@Table(name = "Employee")
-public class Employee
-{
-	@Id
-	@Column(name = "Id")
+public class EmployeeDTO {
+	
 	private Integer employeeId;
-	
-	@Column(name = "Name")
 	private String employeeName;
-	
-	@Column(name = "Email")
 	private String employeeEmail;
-	
-	@Column(name = "Phone")
 	private String employeePhone;
-	
-	@Column(name = "createdby")
 	private String createdBy;
-	
-	@Column(name = "createdon")
-	@JsonSerialize(as = Date.class)
-	@JsonFormat(pattern="dd-MM-yyyy")
 	private Date createdOn;
 
-	public Employee() {
+	public EmployeeDTO() {
 		super();
 	}
 
-	public Employee(Integer employeeId, String employeeName, String employeeEmail, String employeePhone,
+	public EmployeeDTO(Integer employeeId, String employeeName, String employeeEmail, String employeePhone,
 			String createdBy, Date createdOn) {
 		super();
 		this.employeeId = employeeId;
@@ -98,4 +73,5 @@ public class Employee
 	public void setCreatedOn(Date createdOn) {
 		this.createdOn = createdOn;
 	}
+
 }

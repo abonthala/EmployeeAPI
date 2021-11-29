@@ -1,19 +1,19 @@
-package com.evoke.assignment.model;
+package com.evoke.assignment.dto;
 
 import org.springframework.stereotype.Component;
 
 @Component
-public class EmployeeUpdate {
+public class EmployeeUpdateDTO {
 	
 	private String name;
 	private String email;
 	private String phone;
 	
 	
-	public EmployeeUpdate() {
+	public EmployeeUpdateDTO() {
 		super();
 	}
-	public EmployeeUpdate(String name, String email, String phone) {
+	public EmployeeUpdateDTO(String name, String email, String phone) {
 		super();
 		this.name = name;
 		this.email = email;
