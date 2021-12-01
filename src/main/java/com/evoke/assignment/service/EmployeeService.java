@@ -96,7 +96,7 @@ public class EmployeeService {
 	{
 		ResponseModel response = new ResponseModel();
 		response.setMessage(message);
-		response.setStatus(null);
+		response.setStatus(status);
 		return response;
 	}
 }

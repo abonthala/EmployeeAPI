@@ -2,6 +2,12 @@ package com.evoke.assignment.dto;
 
 import java.util.Date;
 
+import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+@Component
 public class EmployeeDTO {
 	
 	private Integer employeeId;
@@ -9,6 +15,8 @@ public class EmployeeDTO {
 	private String employeeEmail;
 	private String employeePhone;
 	private String createdBy;
+	@JsonSerialize(as = Date.class)
+	@JsonFormat(pattern="dd-MM-yyyy")
 	private Date createdOn;
 
 	public EmployeeDTO() {
@@ -72,6 +80,13 @@ public class EmployeeDTO {
 
 	public void setCreatedOn(Date createdOn) {
 		this.createdOn = createdOn;
+	}
+
+	@Override
+	public String toString() {
+		return "EmployeeDTO [employeeId=" + employeeId + ", employeeName=" + employeeName + ", employeeEmail="
+				+ employeeEmail + ", employeePhone=" + employeePhone + ", createdBy=" + createdBy + ", createdOn="
+				+ createdOn + "]";
 	}
 
 }
